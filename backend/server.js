@@ -1,13 +1,15 @@
 import cors from 'cors';
 import express from 'express';
 import usuarioRoutes from './routes/usuarioRoutes.js';
+import pacienteRoutes from './routes/pacienteRoutes.js';
 
 const app = express();
 
-app.use(cors()); // Permite conexões de qualquer origem (CORS)
+app.use(cors());
 app.use(express.json());
 
 app.use(usuarioRoutes);
+app.use(pacienteRoutes);
 
 app.get('/', (req, res) => {
   res.send('API funcionando 🚀');

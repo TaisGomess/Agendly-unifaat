@@ -2,17 +2,21 @@
 <html>
 <head>
     <title>Pacientes</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<h2>Pacientes</h2>
+<div class="container">
+    <h2>Pacientes</h2>
 
-<input id="nome" placeholder="Nome">
-<input id="contato" placeholder="Contato">
+    <div class="form">
+    <input id="nome" placeholder="Nome">
+    <input id="contato" placeholder="Contato">
+    <button onclick="cadastrarPaciente()">Cadastrar</button>
+    </div>
 
-<button onclick="cadastrarPaciente()">Cadastrar</button>
-
-<ul id="lista"></ul>
+    <ul id="lista"></ul>
+</div>
 
 <script src="script.js"></script>
 

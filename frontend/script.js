@@ -33,6 +33,11 @@ async function cadastrarPaciente() {
     const nome = document.getElementById('nome').value;
     const contato = document.getElementById('contato').value;
 
+    if (!nome || !contato) {
+    alert('Preencha todos os campos!');
+    return;
+}
+
     await fetch('http://localhost:3000/pacientes', {
         method: 'POST',
         headers: {
@@ -40,6 +45,13 @@ async function cadastrarPaciente() {
         },
         body: JSON.stringify({ nome, contato })
     });
+
+    alert('Paciente cadastrado com sucesso!');
+
+    // limpar depois de cadastrar para evitar duplicados
+    document.getElementById('nome').value = '';
+    document.getElementById('contato').value = '';
+
 
     listarPacientes();
 
