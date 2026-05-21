@@ -29,3 +29,32 @@ export async function criarPaciente(req, res) {
     res.status(500).json({ erro: 'Erro ao criar paciente' });
     }
 }
+
+// EXCLUIR PACIENTE
+export async function excluirPaciente(req, res) {
+
+    try {
+
+        // pega o id vindo da URL
+        const { id } = req.params;
+
+        // deleta paciente no banco
+        await pool.query(
+            'DELETE FROM pacientes WHERE id = $1',
+            [id]
+        );
+
+        // resposta de sucesso
+        res.json({
+            mensagem: 'Paciente excluído com sucesso'
+        });
+
+    } catch (erro) {
+
+        console.error(erro);
+
+        res.status(500).json({
+            erro: 'Erro ao excluir paciente'
+        });
+    }
+}

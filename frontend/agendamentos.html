@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agendamentos</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <div class="container">
+
+        <h2>Agendamentos</h2>
+
+        <div class="form">
+
+            <select id="paciente_id">
+
+    <option value="">
+        Selecione um paciente
+    </option>
+
+</select>
+
+            <input type="date" id="data">
+
+            <input type="time" id="horario">
+
+            <input type="text" id="observacao" placeholder="Observação">
+
+            <button onclick="cadastrarAgendamento()">
+                Agendar
+            </button>
+
+        </div>
+
+        <ul id="listaAgendamentos"></ul>
+
+    </div>
+
+    <script src="script.js"></script>
+
+</body>
+
+</html>

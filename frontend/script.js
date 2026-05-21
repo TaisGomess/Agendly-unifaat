@@ -73,11 +73,24 @@ async function listarPacientes() {
 
     lista.innerHTML = '';
 
-    pacientes.forEach(p => {
-        const li = document.createElement('li');
-        li.textContent = `${p.nome} - ${p.contato}`;
-        lista.appendChild(li);
-    });
+   // percorre todos os pacientes vindos da API
+pacientes.forEach(p => {
+
+    // cria item da lista
+    const li = document.createElement('li');
+
+    // mostra nome e contato
+    li.innerHTML = `
+        ${p.nome} - ${p.contato}
+
+        <button onclick="excluirPaciente(${p.id})">
+            Excluir
+        </button>
+    `;
+
+    // adiciona na tela
+    lista.appendChild(li);
+});
 
     } catch (erro) {
     console.error(erro);
@@ -87,4 +100,180 @@ async function listarPacientes() {
 // 👇 só roda se existir a lista (ou seja, só na página de pacientes)
 if (document.getElementById('lista')) {
     listarPacientes();
+}
+
+// EXCLUIR PACIENTE
+async function excluirPaciente(id) {
+
+    // confirmação para evitar exclusão sem querer
+    const confirmar = confirm('Deseja excluir este paciente?');
+
+    if (!confirmar) return;
+
+    try {
+
+        // envia DELETE para API
+        await fetch(`http://localhost:3000/pacientes/${id}`, {
+            method: 'DELETE'
+        });
+
+        alert('Paciente excluído!');
+
+        // atualiza lista
+        listarPacientes();
+
+    } catch (erro) {
+        console.error(erro);
+
+        alert('Erro ao excluir paciente');
+    }
+}
+
+// CADASTRAR AGENDAMENTO
+async function cadastrarAgendamento() {
+
+    try {
+
+        const paciente_id = document.getElementById('paciente_id').value;
+
+        const data = document.getElementById('data').value;
+
+        const horario = document.getElementById('horario').value;
+
+        const observacao = document.getElementById('observacao').value;
+
+        // validação simples
+        if (!paciente_id || !data || !horario) {
+
+            alert('Preencha os campos obrigatórios');
+
+            return;
+        }
+
+        // envia para API
+        await fetch('http://localhost:3000/agendamentos', {
+
+            method: 'POST',
+
+            headers: {
+                'Content-Type': 'application/json'
+            },
+
+            body: JSON.stringify({
+                paciente_id,
+                data,
+                horario,
+                observacao
+            })
+        });
+
+        alert('Agendamento criado!');
+
+        // limpa campos
+        document.getElementById('paciente_id').value = '';
+
+        document.getElementById('data').value = '';
+
+        document.getElementById('horario').value = '';
+
+        document.getElementById('observacao').value = '';
+
+        listarAgendamentos();
+
+    } catch (erro) {
+
+        console.error(erro);
+
+        alert('Erro ao criar agendamento');
+    }
+}
+
+
+// LISTAR AGENDAMENTOS
+async function listarAgendamentos() {
+
+    try {
+
+        const response = await fetch('http://localhost:3000/agendamentos');
+
+        const agendamentos = await response.json();
+
+        const lista = document.getElementById('listaAgendamentos');
+
+        // evita erro em outras páginas
+        if (!lista) return;
+
+        lista.innerHTML = '';
+
+        agendamentos.forEach(a => {
+
+            const li = document.createElement('li');
+
+            li.innerHTML = `
+                <strong>${a.paciente}</strong>
+
+                - ${a.data}
+
+                às ${a.horario}
+
+                <br>
+
+                ${a.observacao || ''}
+            `;
+
+            lista.appendChild(li);
+        });
+
+    } catch (erro) {
+
+        console.error(erro);
+    }
+}
+
+
+// executa apenas na tela de agendamentos
+if (document.getElementById('listaAgendamentos')) {
+
+    listarAgendamentos();
+}
+
+// CARREGAR PACIENTES NO SELECT
+async function carregarPacientes() {
+
+    try {
+
+        // busca pacientes da API
+        const response = await fetch('http://localhost:3000/pacientes');
+
+        const pacientes = await response.json();
+
+        // pega o select
+        const select = document.getElementById('paciente_id');
+
+        // evita erro em outras páginas
+        if (!select) return;
+
+        // adiciona pacientes no select
+        pacientes.forEach(p => {
+
+            const option = document.createElement('option');
+
+            option.value = p.id;
+
+            option.textContent = p.nome;
+
+            select.appendChild(option);
+        });
+
+    } catch (erro) {
+
+        console.error(erro);
+    }
+}
+
+
+// executa carregamento do select
+if (document.getElementById('paciente_id')) {
+
+    carregarPacientes();
 }
