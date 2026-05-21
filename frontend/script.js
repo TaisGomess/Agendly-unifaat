@@ -151,7 +151,7 @@ async function cadastrarAgendamento() {
         }
 
         // envia para API
-        await fetch('http://localhost:3000/agendamentos', {
+        const response = await fetch('http://localhost:3000/agendamentos', {
 
             method: 'POST',
 
@@ -167,6 +167,18 @@ async function cadastrarAgendamento() {
             })
         });
 
+        // pega resposta da API
+        const dataResponse = await response.json();
+
+        // verifica erro vindo da API
+        if (!response.ok) {
+
+            alert(dataResponse.erro);
+
+            return;
+        }
+
+        // sucesso
         alert('Agendamento criado!');
 
         // limpa campos
@@ -178,6 +190,7 @@ async function cadastrarAgendamento() {
 
         document.getElementById('observacao').value = '';
 
+        // atualiza lista
         listarAgendamentos();
 
     } catch (erro) {
@@ -247,20 +260,27 @@ async function carregarPacientes() {
 
         const pacientes = await response.json();
 
-        // pega o select
+        // pega select
         const select = document.getElementById('paciente_id');
 
         // evita erro em outras páginas
         if (!select) return;
 
-        // adiciona pacientes no select
+        // limpa opções antigas
+        select.innerHTML = `
+            <option value="">
+                Selecione um paciente
+            </option>
+        `;
+
+        // adiciona pacientes
         pacientes.forEach(p => {
 
             const option = document.createElement('option');
 
             option.value = p.id;
 
-            option.textContent = p.nome;
+            option.textContent = `${p.nome} (${p.creditos} créditos)`;
 
             select.appendChild(option);
         });
